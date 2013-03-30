@@ -97,10 +97,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 			return new ShoppingCartResourceProcessor();
 		}
 
-		@Bean(initMethod = "loadData") public DataLoader dataLoader() {
-			return new DataLoader();
-		}
-
 		@Bean public MessageSource messageSource() {
 			ReloadableResourceBundleMessageSource msgsrc = new ReloadableResourceBundleMessageSource();
 			msgsrc.setBasenames("WEB-INF/messages/ValidationMessages");
@@ -114,7 +110,8 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 			return clr;
 		}
 
-		@Override protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+		@Override
+		protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 			config.setBaseUri(URI.create("http://localhost:8080"));
 
 			config.addResourceMappingForDomainType(Customer.class)
@@ -136,6 +133,10 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	@Import({JpaConfig.class, MongoConfig.class})
 	@ImportResource("classpath:META-INF/spring/springSecurity.xml")
 	public static class AppConfig {
+
+		@Bean(initMethod = "loadData") public DataLoader dataLoader() {
+			return new DataLoader();
+		}
 
 	}
 
