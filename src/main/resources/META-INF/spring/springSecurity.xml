@@ -7,7 +7,7 @@
 
   <http realm="Spring Data REST">
     <http-basic/>
-    <intercept-url pattern="/WEB-INF" access="ROLE_ADMIN"/>
+    <intercept-url pattern="/**" access="ROLE_ADMIN"/>
   </http>
 
   <authentication-manager alias="authenticationManager">

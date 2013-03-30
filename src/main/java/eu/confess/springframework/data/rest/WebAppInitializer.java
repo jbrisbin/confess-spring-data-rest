@@ -1,9 +1,11 @@
 package eu.confess.springframework.data.rest;
 
+import java.net.URI;
 import java.net.UnknownHostException;
 import javax.sql.DataSource;
 
 import com.mongodb.Mongo;
+import eu.confess.springframework.data.rest.domain.Customer;
 import eu.confess.springframework.data.rest.domain.CustomerResourceProcessor;
 import eu.confess.springframework.data.rest.domain.DataLoader;
 import eu.confess.springframework.data.rest.domain.EmailValidator;
@@ -66,14 +68,13 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	@Override
 	protected javax.servlet.Filter[] getServletFilters() {
 		return new javax.servlet.Filter[]{
-				new DelegatingFilterProxy(),
-				new OpenEntityManagerInViewFilter()
+				new OpenEntityManagerInViewFilter(),
+				new DelegatingFilterProxy("springSecurityFilterChain")
 		};
 	}
 
 	@Configuration
 	@EnableEntityLinks
-	@ImportResource("classpath:META-INF/spring/springSecurity.xml")
 	public static class WebConfig extends WebMvcConfigurationSupport {
 
 		@Bean public PaymentController paymentController() {
@@ -114,6 +115,12 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 		}
 
 		@Override protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+			config.setBaseUri(URI.create("http://localhost:8080"));
+
+			config.addResourceMappingForDomainType(Customer.class)
+			      .setPath("customer")
+			      .setRel("customer")
+			      .setExported(true);
 		}
 
 		@Override
@@ -127,6 +134,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
 	@Configuration
 	@Import({JpaConfig.class, MongoConfig.class})
+	@ImportResource("classpath:META-INF/spring/springSecurity.xml")
 	public static class AppConfig {
 
 	}
