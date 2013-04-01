@@ -17,7 +17,8 @@ public class EmailValidator implements Validator {
 		Customer c = (Customer)o;
 
 		ValidationUtils.rejectIfEmpty(errors, "email", "not.blank");
-		if(!c.getEmail().toString().contains("@")) {
+
+		if(null != c.getEmail() && !c.getEmail().toString().contains("@")) {
 			errors.rejectValue("email", "invalid.format");
 		}
 	}
