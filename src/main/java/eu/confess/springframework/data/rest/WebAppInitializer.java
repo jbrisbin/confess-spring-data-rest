@@ -9,6 +9,7 @@ import eu.confess.springframework.data.rest.domain.Customer;
 import eu.confess.springframework.data.rest.domain.CustomerResourceProcessor;
 import eu.confess.springframework.data.rest.domain.DataLoader;
 import eu.confess.springframework.data.rest.domain.EmailValidator;
+import eu.confess.springframework.data.rest.domain.OrderResourceProcessor;
 import eu.confess.springframework.data.rest.domain.ShoppingCartResourceProcessor;
 import eu.confess.springframework.data.rest.repository.CustomerRepository;
 import eu.confess.springframework.data.rest.repository.OrderRepository;
@@ -89,12 +90,16 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	@Configuration
 	public static class RestConfig extends RepositoryRestMvcConfiguration {
 
-		@Bean(initMethod = "init") public CustomerResourceProcessor customerResourceProcessor() {
+		@Bean public CustomerResourceProcessor customerResourceProcessor() {
 			return new CustomerResourceProcessor();
 		}
 
 		@Bean public ShoppingCartResourceProcessor shoppingCartResourceProcessor() {
 			return new ShoppingCartResourceProcessor();
+		}
+
+		@Bean public OrderResourceProcessor orderResourceProcessor() {
+			return new OrderResourceProcessor();
 		}
 
 		@Bean public MessageSource messageSource() {
@@ -114,10 +119,13 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 		protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 			config.setBaseUri(URI.create("http://localhost:8080"));
 
-			config.addResourceMappingForDomainType(Customer.class)
-			      .setPath("customer")
-			      .setRel("customer")
+			config.setResourceMappingForRepository(CustomerRepository.class)
+			      .setPath("customers")
+			      .setRel("customers")
 			      .setExported(true);
+			config.addResourceMappingForDomainType(Customer.class)
+			      .addResourceMappingFor("email")
+			      .setExported(false);
 		}
 
 		@Override
