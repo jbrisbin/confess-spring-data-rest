@@ -123,7 +123,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 			      .setPath("customers")
 			      .setRel("customers")
 			      .setExported(true);
-			config.addResourceMappingForDomainType(Customer.class)
+			config.setResourceMappingForDomainType(Customer.class)
 			      .addResourceMappingFor("email")
 			      .setExported(false);
 		}
